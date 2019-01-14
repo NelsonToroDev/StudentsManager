@@ -8,6 +8,7 @@ using System.Text;
 using StudentsManager.DataModel;
 using log4net;
 using System.Runtime.Caching;
+using StudentsManager.Manager;
 
 namespace StudentsManager.Services
 {
@@ -19,52 +20,33 @@ namespace StudentsManager.Services
 
         protected static MemoryCache studentsCache = new MemoryCache("StudentsCache");
 
-        public void CreateStudent(Student newStudent)
+        public Guid CreateStudent(Student newStudent)
         {
-            newStudent.Id = Guid.NewGuid();
-            lock (studentsCache)
-            {
-                CacheItemPolicy cacheItemPolicy = new CacheItemPolicy()
-                {
-                    UpdateCallback = (cacheEntryUpdateArguments) =>
-                    {
-                        logger.InfoFormat("Student '{0}' was removed from cache", cacheEntryUpdateArguments.Key);
-                    }
-                };
-
-                studentsCache.Set(new CacheItem(newStudent.Id.ToString(), newStudent), cacheItemPolicy);
-            }
+            return StudentManager.CreateStudent(newStudent);
         }
 
         public void DeleteStudent(string studentId)
         {
-            throw new NotImplementedException();
+            Guid parsedStudentId;
+            if (Guid.TryParse(studentId, out parsedStudentId) == false)
+            {
+                logger.InfoFormat("Invalid Student id '{0}', student id should be in Guid format", studentId);
+                throw new Exception(string.Format("Invalid Student id '{0}', student id should be in Guid format", studentId));
+            }
+
+            StudentManager.DeleteStudent(parsedStudentId);
         }
 
         public Student GetStudent(string studentId)
         {
-            Guid parsedProcessGuid = new Guid(studentId);
-            logger.InfoFormat("Querying student with id '{0}'", studentId);
+            Guid parsedStudentId;
+            if (Guid.TryParse(studentId, out parsedStudentId) == false)
+            {
+                logger.InfoFormat("Invalid Student id '{0}', student id should be in Guid format", studentId);
+                throw new Exception(string.Format("Invalid Student id '{0}', student id should be in Guid format", studentId));
+            }
 
-            //lock (studentsCache)
-            //{
-            //    logger.DebugFormat("studentsCache containts '{0}'", studentsCache.GetCount());
-            //    if (studentsCache.Contains(parsedProcessGuid.ToString()) == false)
-            //    {
-            //        logger.InfoFormat("Student with id '{0}' was not found maybe it was removed from cache", studentId);
-            //        throw new Exception(string.Format("Student with id '{0}' was not found maybe it was removed from cache", studentId));
-            //    }
-
-            //    Student student = studentsCache.Get(parsedProcessGuid.ToString()) as Student;
-            //    if (student != null)
-            //    {
-            //        logger.InfoFormat("Student with id '{0}'' was found", studentId);
-            //    }
-
-            //    return student;
-            //}
-
-            return new Student() { Id = Guid.NewGuid(), Gender = "M", Name = "a", Type = "Kinder", LastUpdate = DateTime.Now };
+            return StudentManager.GetStudent(parsedStudentId);
         }
 
         public List<Student> SearchByName(string name, int sorting)

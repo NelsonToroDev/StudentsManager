@@ -17,14 +17,14 @@ namespace StudentsManager.ServiceContracts
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "/", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
-        void CreateStudent(Student newStudent);
+        Guid CreateStudent(Student newStudent);
 
         [OperationContract]
         [WebInvoke(Method = "GET", UriTemplate = "/{studentId}", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
         Student GetStudent(string studentId);
 
         [OperationContract]
-        [WebInvoke(Method = "Delete", UriTemplate = "/{studentId}", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
+        [WebInvoke(Method = "DELETE", UriTemplate = "/{studentId}", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
         void DeleteStudent(string studentId);
 
         //[OperationContract]
