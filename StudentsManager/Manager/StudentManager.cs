@@ -79,7 +79,7 @@ namespace StudentsManager.Manager
         {
             List<Student> students = new List<Student>() {
                 new Student(){ Id = Guid.NewGuid(), Gender="M", Name="a1", Type="Kinder", LastUpdate=DateTime.Now },
-                new Student(){ Id = Guid.NewGuid(), Gender="M", Name="a2", Type="Kinder", LastUpdate=DateTime.Now },
+                new Student(){ Id = Guid.NewGuid(), Gender="M", Name="ba2", Type="Kinder", LastUpdate=DateTime.Now },
                 new Student(){ Id = Guid.NewGuid(), Gender="M", Name="a3", Type="Kinder", LastUpdate=DateTime.Now },
                 new Student(){ Id = Guid.NewGuid(), Gender="M", Name="b1", Type="Kinder", LastUpdate=DateTime.Now },
                 new Student(){ Id = Guid.NewGuid(), Gender="M", Name="b2", Type="Kinder", LastUpdate=DateTime.Now }
@@ -92,16 +92,30 @@ namespace StudentsManager.Manager
             int countArg = 0;
             foreach(string conditional in conditionals)
             {
-                string[] values = conditional.Split(new[] { "==", "!=", ">", ">=", "<", "<="}, StringSplitOptions.RemoveEmptyEntries);
+                string[] values = conditional.Split(new[] { "==", "!=", ">", ">=", "<", "<=", "like"}, StringSplitOptions.RemoveEmptyEntries);
                 string value = values[1].Trim();
                 whereValues.Add(value);
-                string newConditional = conditional.Remove(conditional.LastIndexOf(value)) + "@" + countArg++;
+                string newConditional;
+                if (conditional.Contains(" like "))
+                {
+                    // Name like "a" => Name like @0 => Name.StartsWith("a")
+                    newConditional = conditional.Remove(conditional.LastIndexOf(" like ")) + ".StartsWith(@" + countArg++ + ")";
+                }
+                else
+                {
+                    newConditional = conditional.Remove(conditional.LastIndexOf(value)) + "@" + countArg++;
+                }
+
                 predicate = predicate.Replace(conditional, newConditional);
             }
 
+            //ParameterExpression x = Expression.Parameter(typeof(Student), "student");
+            //LambdaExpression e = System.Linq.Dynamic.DynamicExpression.ParseLambda(new ParameterExpression[] { x }, typeof(Student), "x.Contains(@0)", "a");
+
+
             try
             {
-                //filteredStudents = students.Where("Name == @0", "a1").ToList<Student>();
+                //filteredStudents = students.Where("Name.StartsWith(@0)", "a").ToList<Student>();
                 filteredStudents = students.Where(predicate, whereValues.ToArray()).ToList<Student>();
             }
             catch(Exception e)
