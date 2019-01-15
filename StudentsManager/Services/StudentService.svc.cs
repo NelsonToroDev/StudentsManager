@@ -9,6 +9,7 @@ using StudentsManager.DataModel;
 using log4net;
 using System.Runtime.Caching;
 using StudentsManager.Manager;
+using System.Linq.Expressions;
 
 namespace StudentsManager.Services
 {
@@ -49,9 +50,13 @@ namespace StudentsManager.Services
             return StudentManager.GetStudent(parsedStudentId);
         }
 
-        public List<Student> SearchByName(string name, int sorting)
+        public List<Student> Filter(string filterCriteria)
         {
-            throw new NotImplementedException();
+            string[] filters = filterCriteria.Replace("'", "").Replace(" sortby ", "~").Split('~');
+
+            string predicate = filters[0];
+            string ordering = filters[1];
+            return StudentManager.Filter(predicate, ordering);
         }
 
         public List<Student> SearchByType(string studentType, int sorting)

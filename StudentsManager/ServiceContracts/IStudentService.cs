@@ -27,6 +27,10 @@ namespace StudentsManager.ServiceContracts
         [WebInvoke(Method = "DELETE", UriTemplate = "/{studentId}", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
         void DeleteStudent(string studentId);
 
+        [OperationContract]
+        [WebInvoke(Method = "GET", UriTemplate = "/all?filter={filterCriteria}", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
+        List<Student> Filter(string filterCriteria);
+
         //[OperationContract]
         ////[WebInvoke(Method = "GET", UriTemplate = "/", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
         //List<Student> SearchByName(string name, int sorting);

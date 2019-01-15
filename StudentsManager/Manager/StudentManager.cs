@@ -3,6 +3,8 @@ using StudentsManager.DataModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Linq.Dynamic;
 using System.Runtime.Caching;
 using System.Web;
 
@@ -71,6 +73,53 @@ namespace StudentsManager.Manager
 
                 return student;
             }
+        }
+
+        public static List<Student> Filter(string predicate, string ordering)
+        {
+            List<Student> students = new List<Student>() {
+                new Student(){ Id = Guid.NewGuid(), Gender="M", Name="a1", Type="Kinder", LastUpdate=DateTime.Now },
+                new Student(){ Id = Guid.NewGuid(), Gender="M", Name="a2", Type="Kinder", LastUpdate=DateTime.Now },
+                new Student(){ Id = Guid.NewGuid(), Gender="M", Name="a3", Type="Kinder", LastUpdate=DateTime.Now },
+                new Student(){ Id = Guid.NewGuid(), Gender="M", Name="b1", Type="Kinder", LastUpdate=DateTime.Now },
+                new Student(){ Id = Guid.NewGuid(), Gender="M", Name="b2", Type="Kinder", LastUpdate=DateTime.Now }
+            };
+
+            List<Student> filteredStudents = new List<Student>();
+            List<string> whereValues = new List<string>();
+
+            string[] conditionals = predicate.Split(new[] { "and", "or"}, StringSplitOptions.RemoveEmptyEntries);
+            int countArg = 0;
+            foreach(string conditional in conditionals)
+            {
+                string[] values = conditional.Split(new[] { "==", "!=", ">", ">=", "<", "<="}, StringSplitOptions.RemoveEmptyEntries);
+                string value = values[1].Trim();
+                whereValues.Add(value);
+                string newConditional = conditional.Remove(conditional.LastIndexOf(value)) + "@" + countArg++;
+                predicate = predicate.Replace(conditional, newConditional);
+            }
+
+            try
+            {
+                //filteredStudents = students.Where("Name == @0", "a1").ToList<Student>();
+                filteredStudents = students.Where(predicate, whereValues.ToArray()).ToList<Student>();
+            }
+            catch(Exception e)
+            {
+                logger.Error(e);
+            }
+
+            return filteredStudents;
+        }
+
+        public List<Student> SearchByType(string studentType, int sorting)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Student> SearchByTypeAndGender(string type, string geneder, int sorting)
+        {
+            throw new NotImplementedException();
         }
     }
 }
