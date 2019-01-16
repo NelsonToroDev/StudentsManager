@@ -56,6 +56,7 @@ namespace StudentsClient
             studentClient.SetupStudents(students);
 
             var filteredStudents = studentClient.Filter(filterCriteria);
+            Console.WriteLine("");
             filteredStudents.ForEach(s => Console.WriteLine(s));
             Console.ReadKey();
         }

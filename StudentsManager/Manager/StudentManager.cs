@@ -17,6 +17,11 @@ namespace StudentsManager.Manager
 
         private static List<Student> students = new List<Student>();
 
+        public static void ClearStudents()
+        {
+            students.Clear();
+        }
+
         public static Guid CreateStudent(Student newStudent)
         {
             newStudent.Id = Guid.NewGuid();
