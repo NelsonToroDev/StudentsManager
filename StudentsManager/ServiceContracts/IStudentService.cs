@@ -11,9 +11,9 @@ namespace StudentsManager.ServiceContracts
     [ServiceContract]
     public interface IStudentService
     {
-        //[OperationContract]
-        //[WebInvoke(Method = "POST", UriTemplate = "/", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
-        //void CreateStudents(List<Student> newStudents);
+        [OperationContract]
+        [WebInvoke(Method = "PUT", UriTemplate = "/", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
+        void SetupStudents(List<Student> students);
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "/", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
@@ -30,6 +30,10 @@ namespace StudentsManager.ServiceContracts
         [OperationContract]
         [WebInvoke(Method = "GET", UriTemplate = "/?filter={filterCriteria}", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
         List<Student> Filter(string filterCriteria);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", UriTemplate = "/", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
+        List<Student> GetStudents();
 
         //[OperationContract]
         ////[WebInvoke(Method = "GET", UriTemplate = "/", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]

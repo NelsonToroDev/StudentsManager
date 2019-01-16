@@ -22,7 +22,7 @@ namespace StudentsClient.DataModel
         public static Student CreateFromString(string plainStudent)
         {
             plainStudent = plainStudent.Trim().ToLower();
-            this.LastUpdateDateTime = DateTime.Now;
+            
             string[] values = plainStudent.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             if (values.Length != 4)
             {
@@ -30,18 +30,18 @@ namespace StudentsClient.DataModel
             }
 
             values[0] = values[0].Trim();
-            values[0] = values[1].Trim();
-            values[0] = values[2].Trim();
-            values[0] = values[3].Trim();
+            values[1] = values[1].Trim();
+            values[2] = values[2].Trim();
+            values[3] = values[3].Trim();
 
             // TODO: use enum to represent gender
-            if (values[2] != "M" && values[2] != "F")
+            if (values[2] != "m" && values[2] != "f")
             {
                 return null;
             }
 
             // TODO: use enum to represent type
-            if (values[0] != "Kinder" && values[0] != "Elementary" && values[0] != "High" && values[0] != "University")
+            if (values[0] != "kinder" && values[0] != "elementary" && values[0] != "high" && values[0] != "university")
             {
                 return null;
             }

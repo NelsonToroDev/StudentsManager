@@ -21,6 +21,11 @@ namespace StudentsManager.Services
 
         protected static MemoryCache studentsCache = new MemoryCache("StudentsCache");
 
+        public void SetupStudents(List<Student> students)
+        {
+            students.ForEach(s => StudentManager.CreateStudent(s));
+        }
+
         public Guid CreateStudent(Student newStudent)
         {
             return StudentManager.CreateStudent(newStudent);
@@ -65,14 +70,9 @@ namespace StudentsManager.Services
             return StudentManager.Filter(predicate, ordering);
         }
 
-        public List<Student> SearchByType(string studentType, int sorting)
+        public List<Student> GetStudents()
         {
-            throw new NotImplementedException();
-        }
-
-        public List<Student> SearchByTypeAndGender(string type, string geneder, int sorting)
-        {
-            throw new NotImplementedException();
+            return StudentManager.GetStudents();
         }
     }
 }

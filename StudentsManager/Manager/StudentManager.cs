@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Linq.Dynamic;
 using System.Runtime.Caching;
 using System.Web;
+using System.Collections.Concurrent;
 
 namespace StudentsManager.Manager
 {
@@ -14,39 +15,31 @@ namespace StudentsManager.Manager
     {
         private static readonly ILog logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static MemoryCache studentsCache = new MemoryCache("StudentsCache");
+        private static List<Student> students = new List<Student>();
 
         public static Guid CreateStudent(Student newStudent)
         {
             newStudent.Id = Guid.NewGuid();
-            lock (studentsCache)
+            lock (students)
             {
-                CacheItemPolicy cacheItemPolicy = new CacheItemPolicy()
-                {
-                    UpdateCallback = (cacheEntryUpdateArguments) =>
-                    {
-                        logger.InfoFormat("Student '{0}' was removed from cache", cacheEntryUpdateArguments.Key);
-                    }
-                };
-
-                studentsCache.Set(new CacheItem(newStudent.Id.ToString(), newStudent), cacheItemPolicy);
-
-                return newStudent.Id;
+                students.Add(newStudent);
             }
+            
+            return newStudent.Id;
         }
 
         public static void DeleteStudent(Guid studentId)
         {
-            lock (studentsCache)
+            lock (students)
             {
-                if (studentsCache.Contains(studentId.ToString()) == false)
+                if (students.Any(s => s.Id == studentId) == false)
                 {
                     logger.InfoFormat("Student with id '{0}' was not found maybe it was removed from cache", studentId);
                     throw new Exception(string.Format("Student with id '{0}' was not found maybe it was removed from cache", studentId));
                 }
 
-                var student = studentsCache.Remove(studentId.ToString());
-                if (student != null)
+                var deletedStudents = students.RemoveAll(s => s.Id == studentId);
+                if (deletedStudents > 0)
                 {
                     logger.InfoFormat("Student with id '{0}'' was deleted", studentId);
                 }
@@ -57,15 +50,15 @@ namespace StudentsManager.Manager
         {
             logger.InfoFormat("Querying student with id '{0}'", studentId);
 
-            lock (studentsCache)
+            lock (students)
             {
-                if (studentsCache.Contains(studentId.ToString()) == false)
+                if (students.Any(s => s.Id == studentId) == false)
                 {
                     logger.InfoFormat("Student with id '{0}' was not found maybe it was removed from cache", studentId);
                     throw new Exception(string.Format("Student with id '{0}' was not found maybe it was removed from cache", studentId));
                 }
 
-                Student student = studentsCache.Get(studentId.ToString()) as Student;
+                Student student = students.First(s => s.Id == studentId) as Student;
                 if (student != null)
                 {
                     logger.InfoFormat("Student with id '{0}'' was found", studentId);
@@ -77,14 +70,6 @@ namespace StudentsManager.Manager
 
         public static List<Student> Filter(string predicate, string ordering)
         {
-            List<Student> students = new List<Student>() {
-                new Student(){ Id = Guid.NewGuid(), Gender="M", Name="ba2", Type="Kinder", LastUpdateDateTime=DateTime.Now },
-                new Student(){ Id = Guid.NewGuid(), Gender="M", Name="a3", Type="Kinder", LastUpdateDateTime=DateTime.Now },
-                new Student(){ Id = Guid.NewGuid(), Gender="M", Name="a1", Type="Kinder", LastUpdateDateTime=DateTime.Now },
-                new Student(){ Id = Guid.NewGuid(), Gender="M", Name="b1", Type="Kinder", LastUpdateDateTime=DateTime.Now },
-                new Student(){ Id = Guid.NewGuid(), Gender="M", Name="b2", Type="Kinder", LastUpdateDateTime=DateTime.Now }
-            };
-
             List<Student> filteredStudents = new List<Student>();
             List<string> whereValues = new List<string>();
 
@@ -119,6 +104,14 @@ namespace StudentsManager.Manager
             }
 
             return filteredStudents;
+        }
+
+        public static List<Student> GetStudents()
+        {
+            lock (students)
+            {
+                return students;
+            }
         }
     }
 }

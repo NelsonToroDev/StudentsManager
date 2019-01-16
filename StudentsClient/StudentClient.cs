@@ -104,5 +104,10 @@ namespace StudentsClient
         {
             return GetDataFromServer<List<Student>>($"{endPoint}?filter='{filterCriteria}'");
         }
+
+        public List<Student> GetStudents()
+        {
+            return GetDataFromServer<List<Student>>(endPoint);
+        }
     }
 }

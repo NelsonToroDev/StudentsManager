@@ -10,10 +10,13 @@ namespace StudentsClient
 {
     class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             StudentClient studentClient = new StudentClient();
-            var filteredStudents = studentClient.Filter("Name like a sortby Name desc");
+            List<Student> students = LoadStudents(studentClient, "input.csv");
+            studentClient.SetupStudents(students);
+            var retrievedStudents = studentClient.GetStudents();
+            var filteredStudents = studentClient.Filter("Name like k sortby Name desc");
             filteredStudents.ForEach(s => Console.WriteLine(s));
             Console.ReadKey();
         }
@@ -33,11 +36,6 @@ namespace StudentsClient
             }
 
             return students;
-        }
-
-        private static void SetupStudents(StudentClient studentClient, List<Student> students)
-        {
-            studentClient.SetupStudents(students);
         }
     }
 }
