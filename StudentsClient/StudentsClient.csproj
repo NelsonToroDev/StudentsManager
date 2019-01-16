@@ -7,7 +7,7 @@
     <ProjectGuid>{B7BFE113-59A6-4264-A38B-281BD8268677}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>StudentsClient</RootNamespace>
-    <AssemblyName>StudentsClient</AssemblyName>
+    <AssemblyName>StudentSolution</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

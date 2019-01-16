@@ -16,11 +16,6 @@ namespace StudentsClient
         // TODO: move to appsettings
         private string endPoint = "http://localhost:8000/students/";
 
-        public StudentClient()
-        {
-
-        }
-
         private TResp SendDataToServer<TSend, TResp>(string endpoint, string method, TSend data)
         {
             var request = (HttpWebRequest)HttpWebRequest.Create(endpoint);
@@ -100,14 +95,14 @@ namespace StudentsClient
             SendDataToServer<Object, Object>(endPoint + studentId, "DELETE", null);
         }
 
-        public List<Student> Filter(string filterCriteria)
-        {
-            return GetDataFromServer<List<Student>>($"{endPoint}?filter='{filterCriteria}'");
-        }
-
         public List<Student> GetStudents()
         {
             return GetDataFromServer<List<Student>>(endPoint);
+        }
+
+        public List<Student> Filter(string filterCriteria)
+        {
+            return GetDataFromServer<List<Student>>($"{endPoint}?filter='{filterCriteria}'");
         }
     }
 }
