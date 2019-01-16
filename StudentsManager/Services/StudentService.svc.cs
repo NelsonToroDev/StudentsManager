@@ -50,10 +50,16 @@ namespace StudentsManager.Services
             return StudentManager.GetStudent(parsedStudentId);
         }
 
+        /// <summary>
+        /// Dynamic filtering
+        /// </summary>
+        /// <param name="filterCriteria">In form 'Name like a sortby Name desc' 
+        /// where Name is a property of Student, like the the operator followed by the other operand 'a' in this we are going to look for all Students which name starts with 'a'
+        /// </param>
+        /// <returns></returns>
         public List<Student> Filter(string filterCriteria)
         {
             string[] filters = filterCriteria.Replace("'", "").Replace(" sortby ", "~").Split('~');
-
             string predicate = filters[0];
             string ordering = filters[1];
             return StudentManager.Filter(predicate, ordering);

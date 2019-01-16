@@ -7,6 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudentsManager", "Students
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HostService", "HostService\HostService.csproj", "{20001A63-B563-4F13-BD11-3A2E0DA1712E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudentsClient", "StudentsClient\StudentsClient.csproj", "{B7BFE113-59A6-4264-A38B-281BD8268677}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5D1BFAFE-65E0-49AA-9AFA-A9AB5B3020BA} = {5D1BFAFE-65E0-49AA-9AFA-A9AB5B3020BA}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +26,10 @@ Global
 		{20001A63-B563-4F13-BD11-3A2E0DA1712E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20001A63-B563-4F13-BD11-3A2E0DA1712E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20001A63-B563-4F13-BD11-3A2E0DA1712E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7BFE113-59A6-4264-A38B-281BD8268677}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7BFE113-59A6-4264-A38B-281BD8268677}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7BFE113-59A6-4264-A38B-281BD8268677}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7BFE113-59A6-4264-A38B-281BD8268677}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
